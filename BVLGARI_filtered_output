@@ -1,0 +1,37 @@
+import pandas as pd
+import re
+
+df = pd.read_csv(r"C:\Users\Owner\OneDrive\바탕 화면\7조\cafe_posts_clean.csv")
+
+# 키워드 목록 (나머지 일반 키워드들)
+keywords = [
+    # 디바스 드림 관련
+    "디바스 드림", "디바", "디바스드림", "Divas Dream",
+    # 비제로원 관련
+    "비제로원", "비제", "비제로", "B.zero1",
+    # 세르펜티 관련
+    "세르펜티", "세르", "세르펜", "Serpenti", "뱀",
+]
+
+# '불가리', '불가', 'Bulgari', 'BVLGARI', 'BULGARI' → 앞뒤에 어떤 단어가 붙어도 매칭
+regex_patterns = [
+    r".*불가리.*", 
+    r".*불가.*", 
+    r".*Bulgari.*", 
+    r".*BVLGARI.*", 
+    r".*BULGARI.*"
+]
+
+# 일반 키워드도 regex 패턴으로 변환
+regex_patterns += [re.escape(k) for k in keywords]
+
+# text 컬럼에서 정규식 매칭
+pattern = "(" + "|".join(regex_patterns) + ")"
+mask = df["text"].astype(str).str.contains(pattern, regex=True, case=False)
+
+filtered_df = df[mask]
+
+# 결과 저장
+filtered_df.to_csv("BVLGARI_filtered_output.csv", index=False, encoding="utf-8-sig")
+
+print("완료! filtered_output.csv 파일이 생성되었습니다.")
