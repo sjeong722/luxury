@@ -1,0 +1,16 @@
+# df_items 에서 불가리 인기템 3가지 라인 추출하자.
+
+import pandas as pd
+
+# 파일 불러오기
+df_items = pd.read_csv("data/1.jewelry_items_word_with_category.csv")
+
+# 조건에 맞는 line_id만 필터링
+target_ids = ["l020", "l055", "l064"]
+filtered = df_items[df_items["line_id"].isin(target_ids)]
+
+print(filtered.head())
+print("총 행 개수:", len(filtered))
+
+# 필요하다면 새로운 CSV로 저장
+filtered.to_csv("data/Bulgary_top3_items_filtered.csv", index=False)
